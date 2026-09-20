@@ -1,14 +1,34 @@
 from django.shortcuts import render,redirect
 from .models import *
 from django.contrib import messages
+from .forms import CustomUserForm
 
 # Create your views here.
 
 def home(request):
-    return render(request,"shop/index.html")
+    trending_products = Product.objects.filter(trending=1)
+    return render(request,"shop/index.html", {'trending_products':trending_products})
 
 def  register(request):
-    return render(request,"shop/register.html")
+    if request.method == 'POST':
+        form=CustomUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Register Successful!')
+            return redirect('login')
+        else:
+            messages.warning(request,'Re-Enter the details.')
+            
+            
+            
+    else:
+        form = CustomUserForm()
+    return render(request, 'shop/register.html',{'form':form})
+
+def login(request):
+    return render(request, 'shop/login.html')
+
+    
 
 def collections(request):
     category = Catagory.objects.filter(status=0)

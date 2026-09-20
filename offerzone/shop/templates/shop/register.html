@@ -2,8 +2,84 @@
 
 {% block title %}
  <title>Register Page</title>
-{% endblock title%}
+{% endblock title %}
 
 {% block content %}
  <h1>Register Page</h1>
+ 
+ <!-- Django Messages (To display your 'Re-Enter the details.' or success alerts) -->
+ {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+ {% endif %}
+
+ <div class="reg-form">
+    <form method="post" action="">
+        {% csrf_token %}
+        
+        <!-- Global Form Errors (Crucial for overall errors like 'Passwords do not match') -->
+        {% if form.non_field_errors %}
+            <div class="non-field-errors" style="color: red; margin: 10px;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div style="margin: 10px;">
+            <label>Username</label>
+            <div style="margin: 5px;">
+                {{ form.username }}
+            </div>
+            {% if form.username.errors %}
+                <span style="color: red;">{{ form.username.errors }}</span>
+            {% endif %}
+        </div>
+
+        <div style="margin: 10px;">
+            <label>Email</label>
+            <div style="margin: 5px;">
+                {{ form.email }}
+            </div>
+            {% if form.email.errors %}
+                <span style="color: red;">{{ form.email.errors }}</span>
+            {% endif %}
+        </div>
+
+        <div style="margin: 10px;">
+            <label>Password</label>
+            <div style="margin: 5px;">
+                <!-- NOTE: Changed from password1 to password to match standard Django field names -->
+                {{ form.password1 }} 
+            </div>
+            {% if form.password.errors %}
+                <span style="color: red;">{{ form.password1.errors }}</span>
+            {% endif %}
+        </div>
+
+        <div style="margin: 10px;">
+            <label>Confirm Password</label>
+            <div style="margin: 5px;">
+                <!-- Ensure this exact field matches your defined field variable in forms.py -->
+                {{ form.password2 }}
+            </div>
+            {% if form.password2.errors %}
+                <span style="color: red;">{{ form.password2.errors }}</span>
+            {% endif %}
+        </div>
+
+        <div style="margin: 10px; display:inline-table;">
+            <button type="submit">Register</button>
+        </div>
+        <div style="margin: 10px;">
+            <label for="">already register - login here -> <a href="{% url 'login' %}" style="font-size: 100%;">log-in</a></label> 
+        </div>
+
+    </form>
+ </div>
 {% endblock content %}
+
+
