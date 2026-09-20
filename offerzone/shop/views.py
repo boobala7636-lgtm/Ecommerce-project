@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from .models import *
 from django.contrib import messages
 from .forms import CustomUserForm
+from django.contrib.auth import authenticate, login, logout
+
 
 # Create your views here.
 
@@ -9,24 +11,49 @@ def home(request):
     trending_products = Product.objects.filter(trending=1)
     return render(request,"shop/index.html", {'trending_products':trending_products})
 
-def  register(request):
-    if request.method == 'POST':
-        form=CustomUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Register Successful!')
-            return redirect('login')
-        else:
-            messages.warning(request,'Re-Enter the details.')
-            
-            
-            
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('/')
     else:
-        form = CustomUserForm()
-    return render(request, 'shop/register.html',{'form':form})
+        if request.method == 'POST':
+            name = request.POST.get('username')
+            pwd = request.POST.get('password')
+            user = authenticate(request,username=name,password=pwd)
 
-def login(request):
-    return render(request, 'shop/login.html')
+            if user is not None:
+                login(request,user)
+                messages.success(request,'Logged In Successful!')
+                return redirect('/')
+            else:
+                messages.error(request,'Invalid User and Password')
+                return redirect('login')
+        return render(request, 'shop/login.html')
+
+def logout_view(request):
+    if request.user.is_authenticated:
+        logout(request)
+        messages.success(request,'Logged Out Successfully.')
+    return redirect('/')
+
+
+def  register(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    else:
+        if request.method == 'POST':
+            form=CustomUserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Register Successful!')
+                return redirect('login')
+            else:
+                messages.warning(request,'Re-Enter the details.')
+                
+        else:
+            form = CustomUserForm()
+        return render(request, 'shop/register.html',{'form':form})
+
+
 
     
 
@@ -53,3 +80,9 @@ def product_details(request,cname,pname):
     else:
         messages.warning(request, 'No Such Product Found')
         return redirect('collections')
+
+def add_to_cart(request):
+    pass
+
+def checkout(request):
+    pass

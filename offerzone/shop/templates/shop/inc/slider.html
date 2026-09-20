@@ -1,29 +1,140 @@
 {% load static %}
 
-<div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="{% static 'images/slide1.jpg' %}" class="d-block w-100" alt="image 1">
+<style>
+  .offerzone-slider-full-wrapper {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    background-color: #f1f3f6;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  .offerzone-carousel-full {
+    border-radius: 0 !important;
+    overflow: hidden;
+    background-color: #ffffff;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Full-width carousel items */
+  .offerzone-carousel-full .carousel-item {
+    width: 100%;
+    height: auto;
+    background-color: #ffffff;
+  }
+
+  .offerzone-carousel-full .carousel-item img {
+    width: 100%;
+    height: auto;
+    max-height: 550px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Soft Blurred Glassmorphic Navigation Buttons */
+  .offerzone-carousel-full .carousel-control-prev,
+  .offerzone-carousel-full .carousel-control-next {
+    width: 42px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.35); /* Semi-transparent */
+    backdrop-filter: blur(8px); /* Frosted glass blur effect */
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 0 8px 8px 0;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    z-index: 5;
+  }
+
+  .offerzone-carousel-full .carousel-control-next {
+    border-radius: 8px 0 0 8px;
+  }
+
+  .offerzone-carousel-full .carousel-control-prev:hover,
+  .offerzone-carousel-full .carousel-control-next:hover {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 1;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .offerzone-carousel-full .carousel-control-prev-icon,
+  .offerzone-carousel-full .carousel-control-next-icon {
+    filter: invert(1) grayscale(100%) brightness(20%);
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Indicator Pills */
+  .offerzone-carousel-full .carousel-indicators [data-bs-target] {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: #ffffff;
+    opacity: 0.6;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .offerzone-carousel-full .carousel-indicators .active {
+    opacity: 1;
+    width: 28px;
+    background-color: #2874f0;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+</style>
+
+<div class="offerzone-slider-full-wrapper">
+  <!-- Dynamic Auto-Slider Configuration: Interval 3000ms (3s) with Continuous Ride -->
+  <div id="carouselExampleFade" class="carousel slide carousel-fade offerzone-carousel-full" data-bs-ride="carousel" data-bs-interval="3000">
+    
+    <!-- Navigation Pill Indicators -->
+    <div class="carousel-indicators mb-3">
+      <button type="button" data-bs-target="#carouselExampleFade" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleFade" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleFade" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleFade" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#carouselExampleFade" data-bs-slide-to="4" aria-label="Slide 5"></button>
     </div>
-    <div class="carousel-item">
-      <img src="{% static 'images/slide2.jpg' %}" class="d-block w-100" alt="image 2">
+
+    <!-- Carousel Banner Slides -->
+    <div class="carousel-inner">
+      <div class="carousel-item active" data-bs-interval="3000">
+        <img src="{% static 'images/slide1.jpg' %}" class="d-block w-100" alt="Offer Zone Special Deal 1">
+      </div>
+      <div class="carousel-item" data-bs-interval="3000">
+        <img src="{% static 'images/slide2.jpg' %}" class="d-block w-100" alt="Offer Zone Special Deal 2">
+      </div>
+      <div class="carousel-item" data-bs-interval="3000">
+        <img src="{% static 'images/slide3.jpg' %}" class="d-block w-100" alt="Offer Zone Special Deal 3">
+      </div>
+      <div class="carousel-item" data-bs-interval="3000">
+        <img src="{% static 'images/slide4.jpg' %}" class="d-block w-100" alt="Offer Zone Special Deal 4">
+      </div>
+      <div class="carousel-item" data-bs-interval="3000">
+        <img src="{% static 'images/slide5.jpg' %}" class="d-block w-100" alt="Offer Zone Special Deal 5">
+      </div>
     </div>
-    <div class="carousel-item">
-      <img src="{% static 'images/slide3.jpg' %}" class="d-block w-100" alt="image 3">
-    </div>
-    <div class="carousel-item">
-      <img src="{% static 'images/slide4.jpg' %}" class="d-block w-100" alt="image 4">
-    </div>
-    <div class="carousel-item">
-      <img src="{% static 'images/slide5.jpg' %}" class="d-block w-100" alt="image 5">
-    </div>
+
+    <!-- Soft Blurred Navigation Control Arrows -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
 </div>

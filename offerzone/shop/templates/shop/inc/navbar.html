@@ -1,24 +1,146 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed top">
+<style>
+  /* Premium E-Commerce Navbar Base */
+  .oz-navbar-modern {
+    background: linear-gradient(135deg, #1e52b6 0%, #2874f0 50%, #0d47a1 100%) !important;
+    padding: 12px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    z-index: 1030;
+  }
+
+  /* Vibrant Brand Logo */
+  .oz-brand-glow {
+    font-weight: 800;
+    font-size: 22px;
+    color: #ffffff !important;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.3s ease;
+  }
+
+  .oz-brand-glow i {
+    color: #ffc107;
+    filter: drop-shadow(0 2px 4px rgba(255, 193, 7, 0.4));
+  }
+
+  .oz-brand-glow:hover {
+    transform: translateY(-1px);
+  }
+
+  /* High-Attraction Navigation Links */
+  .oz-nav-link-glow {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 8px 16px !important;
+    border-radius: 8px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+  }
+
+  .oz-nav-link-glow i {
+    font-size: 15px;
+    transition: transform 0.25s ease;
+  }
+
+  /* Hover & Active States */
+  .oz-nav-link-glow:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .oz-nav-link-glow:hover i {
+    transform: scale(1.15);
+  }
+
+  .oz-nav-link-glow.active {
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  }
+
+  /* Mobile Toggler Styling */
+  .oz-toggler {
+    border: none !important;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .oz-toggler:focus {
+    box-shadow: none;
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark oz-navbar-modern sticky-top">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'home' %}"><i class="fa-brands fa-opencart"></i> Offer Zone</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    
+    <!-- Brand Logo -->
+    <a class="navbar-brand oz-brand-glow" href="{% url 'home' %}">
+      <i class="fa-brands fa-opencart"></i> Offer Zone
+    </a>
+
+    <!-- Mobile Toggler -->
+    <button class="navbar-toggler oz-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
+    <!-- Navigation Menu -->
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1 my-2 my-lg-0">
+        
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'home' %}"><i class="fa-solid fa-house-chimney-crack"></i> Home</a>
+          <a class="nav-link oz-nav-link-glow active" aria-current="page" href="{% url 'home' %}">
+            <i class="fa-solid fa-house-chimney-crack text-warning"></i> Home
+          </a>
         </li>
+
+        {% if request.user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link oz-nav-link-glow" href="#">
+              <i class="fa-solid fa-user text-info"></i> {{ request.user }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link oz-nav-link-glow" href="{% url 'logout' %}">
+              <i class="fa-solid fa-right-from-bracket text-danger"></i> Log-out
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link oz-nav-link-glow" href="{% url 'register' %}">
+              <i class="fa-solid fa-user text-info"></i> Register
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link oz-nav-link-glow" href="{% url 'login' %}">
+              <i class="fa-solid fa-user-lock text-warning"></i> Login
+            </a>
+          </li>
+        {% endif %}
+
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'register' %}"><i class="fa-solid fa-user"></i> Register</a>
+          <a class="nav-link oz-nav-link-glow" href="{% url 'collections' %}">
+            <i class="fa-solid fa-store text-success"></i> Collections
+          </a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'collections' %}"><i class="fa-solid fa-store"></i> Collections</a>
+          <a class="nav-link oz-nav-link-glow" href="#">
+            <i class="fa-solid fa-cart-shopping text-warning"></i> Cart
+          </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fa-solid fa-cart-shopping"></i>Cart</a>
-        </li>
+
       </ul>
     </div>
+
   </div>
 </nav>

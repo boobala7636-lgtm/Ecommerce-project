@@ -1,1 +1,144 @@
-<h3>Login Page</h3>
+{% extends 'shop/layouts/main.html' %}
+
+{% block title %}
+<title>Login | Offerzone</title>
+{% endblock title %}
+
+{% block content %}
+<style>
+  .offerzone-auth-wrapper {
+    background-color: #f1f3f6;
+    min-height: 80vh;
+    font-family: 'Poppins', Roboto, Arial, sans-serif;
+  }
+  .offerzone-auth-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+  .offerzone-auth-banner {
+    background: linear-gradient(135deg, #2874f0 0%, #1e52b6 100%);
+    color: #ffffff;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .offerzone-auth-banner h3 {
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+  }
+  .offerzone-auth-banner p {
+    color: #dbf0ff;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .offerzone-field-group {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .offerzone-field-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .offerzone-field-group input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .offerzone-field-group input:focus {
+    border-color: #2874f0;
+    box-shadow: 0 0 0 3px rgba(40, 116, 240, 0.15);
+  }
+  .offerzone-btn-submit {
+    background-color: #fb641b;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 20px;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+    transition: background-color 0.2s ease;
+  }
+  .offerzone-btn-submit:hover {
+    background-color: #e65612;
+    color: #ffffff;
+  }
+</style>
+
+<section class="offerzone-auth-wrapper py-5 d-flex align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        
+        <!-- Main Card Grid -->
+        <div class="row offerzone-auth-card g-0">
+          
+          <!-- Left Promotional Panel -->
+          <div class="col-md-5 offerzone-auth-banner d-none d-md-flex">
+            <div>
+              <h3 class="mb-3">Login</h3>
+              <p>Get access to your Orders, Wishlist and Recommendations on Offerzone.</p>
+            </div>
+            <div class="mt-4">
+              <small class="text-white-50">100% Secure & Safe Authentication</small>
+            </div>
+          </div>
+
+          <!-- Right Login Form Panel -->
+          <div class="col-12 col-md-7 p-4 p-md-5 bg-white">
+            
+            <h4 class="fw-bold text-dark mb-3">Welcome Back</h4>
+
+            <!-- Include Messages -->
+            {% include 'shop/inc/messages.html' %}
+
+            <form method="post" action="">
+              {% csrf_token %}
+
+              <!-- Username Field -->
+              <div class="offerzone-field-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter Your Name" required>
+              </div>
+
+              <!-- Password Field -->
+              <div class="offerzone-field-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter Your Password" required>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="mt-4 mb-3">
+                <button type="submit" class="offerzone-btn-submit">Login</button>
+              </div>
+
+              <!-- New User Switch Link -->
+              <div class="text-center pt-2 border-top">
+                <span class="text-muted small">New to Offerzone?</span>
+                <a href="{% url 'register' %}" class="fw-bold text-decoration-none ms-1" style="color: #2874f0;">Create an account</a>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

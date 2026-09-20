@@ -1,58 +1,293 @@
 {% extends 'shop/layouts/main.html' %}
 
-
 {% block title %}
-
-
-    
- <title>Buy {{ product_details.name | title }}</title>
-{% endblock title%}
+<title>Buy {{ product_details.name | title }} | Offerzone</title>
+{% endblock title %}
 
 {% block content %}
+<style>
+  /* Offerzone Brand Theme Styles */
+  .offerzone-container {
+    background-color: #f1f3f6;
+    font-family: 'Poppins', Roboto, Arial, sans-serif;
+  }
+  .offerzone-card {
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  }
+  .offerzone-image-sticky {
+    position: sticky;
+    top: 20px;
+  }
+  .offerzone-hot-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    background: linear-gradient(135deg, #ff0000, #ff7300);
+    color: #fff;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(255, 0, 0, 0.4);
+    animation: offerzonePulse 1.8s infinite;
+  }
+  @keyframes offerzonePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  .offerzone-btn-cart {
+    background-color: #ff9f00;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    border-radius: 2px;
+    padding: 14px 20px;
+  }
+  .offerzone-btn-cart:hover {
+    background-color: #f39600;
+    color: #fff;
+  }
+  .offerzone-btn-buy {
+    background-color: #fb641b;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    border-radius: 2px;
+    padding: 14px 20px;
+  }
+  .offerzone-btn-buy:hover {
+    background-color: #e65612;
+    color: #fff;
+  }
+  .offerzone-price {
+    font-size: 28px;
+    font-weight: 600;
+    color: #212121;
+  }
+  .offerzone-mrp {
+    font-size: 16px;
+    color: #878787;
+    text-decoration: line-through;
+  }
+  .offerzone-discount {
+    font-size: 16px;
+    color: #388e3c;
+    font-weight: 600;
+  }
+  .offerzone-qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #c2c2c2;
+    background: #fff;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+</style>
 
-
-<section class="bg-light py-4 my-5" style="min-height: 600px;">
-  <div class="container">
-    <div class="row">
+<section class="offerzone-container py-3" style="min-height: 600px;">
+  <div class="container-fluid px-md-5">
+    
+    <!-- Breadcrumb -->
+    <div class="row mb-2">
       <div class="col-12">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'product' product_details.catagory.name %}">Collections</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ product_details.name }}</li>
+          <ol class="breadcrumb mb-0 px-0" style="font-size: 12px;">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-secondary text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'product' product_details.catagory.name %}" class="text-secondary text-decoration-none">Collections</a></li>
+            <li class="breadcrumb-item active text-truncate" aria-current="page" style="max-width: 200px;">{{ product_details.name }}</li>
           </ol>
         </nav>
-        <h4 class="mb-3" style="color: dimgray;">{{product_details.name | title}}</h4>
-        <hr style="border-color: #b8bfc2;">
       </div>
-      <div class="col-4 my-3" pic-box>
-        {% if product_details.trending %}
-        <div class="hot">Hot</div>
-        {% endif %}
-        <img src="{{ product_details.product_image.url }}" class="card-image-top" alt="{{ product_details.name }}">
-      </div>
-      <div class="col-5 my-3" style="margin-left: auto; margin-top: auto;">
-        <h5 class="text-success">{{ product_details.name | title }}</h5>
-        <p>{{ product_details.vendor }}</p>
-        <p>{{ product_details.description }}</p>
-        <h6 class="my-2" style="color: red;">Current Price : Rs. <s>{{ product_details.original_price }}</s></h6>
-        <h5 class="my-2"> <b style="color: black; border-color: gray; text-transform: capitalize; font: 23px Poppins serif;"> Offer Price : Rs. {{ product_details.selling_price }} </b></h5>
-        <div class="my-3">
+    </div>
+
+    <!-- Main Offerzone Product Card -->
+    <div class="row offerzone-card p-3 p-md-4">
+      
+      <!-- Left Column: Product Image -->
+      <div class="col-12 col-md-5 col-lg-4 mb-4 mb-md-0">
+        <div class="offerzone-image-sticky">
+          <div class="position-relative border p-3 text-center rounded d-flex align-items-center justify-content-center" style="height: 380px; background: #fff;">
+            
+            <!-- Hot Tag in Top Right Corner of Image -->
+            {% if product_details.trending %}
+            <span class="offerzone-hot-badge">
+              🔥 HOT
+            </span>
+            {% endif %}
+
+            <img src="{{ product_details.product_image.url }}" class="img-fluid" style="max-height: 350px; object-fit: contain;" alt="{{ product_details.name }}">
+          </div>
+
+          <!-- Desktop Action Buttons -->
           {% if product_details.quantity > 0 %}
-            <button type="button" class="btn btn-primary btn-lg" style="background-color: white; color: black; border-color: black;">Add to Cart</button>
-            <button type="button" class="btn btn-secondary btn-lg" style="background-color: yellow; color: rgb(5, 5, 5); border-color: rgb(0, 0, 0);">Buy Now</button>
-          {% else %}
-            <button type="button" class="btn btn-primary btn-lg" style="background-color: rgb(54, 53, 53); color: black; border-color: black;">Out of Stock</button>
+          <div class="d-none d-md-flex gap-2 mt-3">
+            <button type="button" id="btn-add-to-cart-desktop" class="btn offerzone-btn-cart flex-grow-1 text-uppercase">
+              <svg width="16" height="16" fill="currentColor" class="bi bi-cart-fill me-1" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg> Add to Cart
+            </button>
+            <button type="button" id="btn-buy-now-desktop" class="btn offerzone-btn-buy flex-grow-1 text-uppercase">
+              <svg width="16" height="16" fill="currentColor" class="bi bi-lightning-fill me-1" viewBox="0 0 16 16"><path d="M11.251.055a.5.5 0 0 1 .249.403v5.158h3.5a.5.5 0 0 1 .37.837l-9 10a.5.5 0 0 1-.854-.516l1.352-5.877H2.5a.5.5 0 0 1-.37-.837l9-10a.5.5 0 0 1 .621-.168z"/></svg> Buy Now
+            </button>
+          </div>
           {% endif %}
         </div>
+      </div>
+
+      <!-- Right Column: Details & Pricing -->
+      <div class="col-12 col-md-7 col-lg-8 ps-md-4">
+        
+        <span class="text-secondary small fw-bold mb-1 d-block">{{ product_details.vendor }}</span>
+        <h5 class="fw-normal text-dark mb-2" style="font-size: 20px;">{{ product_details.name | title }}</h5>
+
+        <!-- Rating Indicator -->
+        <div class="d-flex align-items-center mb-3">
+          <span class="badge bg-success px-2 py-1 me-2" style="font-size: 12px;">4.5 ★</span>
+          <span class="text-secondary small">Ratings & Reviews</span>
+        </div>
+
+        <!-- Pricing Section -->
+        <div class="d-flex align-items-baseline gap-2 mb-2">
+          <span class="offerzone-price">Rs. {{ product_details.selling_price }}</span>
+          <span class="offerzone-mrp">Rs. {{ product_details.original_price }}</span>
+          <span class="offerzone-discount">Special Offerzone Price</span>
+        </div>
+
+        <p class="text-secondary small mb-3">{{ product_details.description }}</p>
+
+        {% if product_details.quantity > 0 %}
+          <!-- CSRF Token & Hidden Product ID -->
+          {% csrf_token %}
+          <input type="hidden" id="product_id" value="{{ product_details.id }}">
+
+          <!-- Quantity Selector -->
+          <div class="my-4 d-flex align-items-center gap-3">
+            <span class="fw-bold small text-secondary">Quantity:</span>
+            <div class="d-flex align-items-center gap-2">
+              <button type="button" class="offerzone-qty-btn" id="btn-minus">-</button>
+              <input type="text" id="product-qty" value="1" readonly class="text-center fw-bold border-0" style="width: 32px;" data-max-stock="{{ product_details.quantity }}">
+              <button type="button" class="offerzone-qty-btn" id="btn-plus">+</button>
+            </div>
+            <span class="text-muted small">({{ product_details.quantity }} left in stock)</span>
+          </div>
+
+          <!-- Mobile Action Buttons -->
+          <div class="d-flex d-md-none gap-2 mt-3">
+            <button type="button" id="btn-add-to-cart-mobile" class="btn offerzone-btn-cart flex-grow-1 text-uppercase">
+              Add to Cart
+            </button>
+            <button type="button" id="btn-buy-now-mobile" class="btn offerzone-btn-buy flex-grow-1 text-uppercase">
+              Buy Now
+            </button>
+          </div>
+        {% else %}
+          <div class="mt-3">
+            <button type="button" class="btn btn-secondary btn-lg w-100 disabled" disabled>Out of Stock</button>
+          </div>
+        {% endif %}
+
+        <!-- Trust Features -->
+        <div class="row border-top pt-3 mt-4 text-secondary small">
+          <div class="col-4 d-flex align-items-center gap-2">
+            <svg width="20" height="20" fill="#388e3c" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>
+            <span>100% Original Products</span>
+          </div>
+          <div class="col-4 d-flex align-items-center gap-2">
+            <svg width="20" height="20" fill="#388e3c" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>
+            <span>Pay on Delivery Available</span>
+          </div>
+          <div class="col-4 d-flex align-items-center gap-2">
+            <svg width="20" height="20" fill="#388e3c" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>
+            <span>Easy 7 Days Return</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </section>
+
+<!-- Offerzone JS Action Engine -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const qtyInput = document.getElementById("product-qty");
+    const btnPlus = document.getElementById("btn-plus");
+    const btnMinus = document.getElementById("btn-minus");
+
+    if (qtyInput) {
+      const maxStock = parseInt(qtyInput.getAttribute("data-max-stock"), 10) || 1;
+
+      btnPlus?.addEventListener("click", function () {
+        let currentVal = parseInt(qtyInput.value, 10) || 1;
+        if (currentVal < maxStock) {
+          qtyInput.value = currentVal + 1;
+        } else {
+          alert("Maximum available stock reached on Offerzone!");
+        }
+      });
+
+      btnMinus?.addEventListener("click", function () {
+        let currentVal = parseInt(qtyInput.value, 10) || 1;
+        if (currentVal > 1) {
+          qtyInput.value = currentVal - 1;
+        }
+      });
+
+      function handleCartAction(isBuyNow) {
+        const productId = document.getElementById("product_id")?.value;
+        const quantity = parseInt(qtyInput.value, 10);
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+        if (!productId) {
+          alert("Product ID is missing!");
+          return;
+        }
+
+        fetch("{% url 'add_to_cart' %}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken
+          },
+          body: JSON.stringify({
+            product_id: productId,
+            product_qty: quantity
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success" || data.status === "Success") {
+            if (isBuyNow) {
+              window.location.href = "{% url 'checkout' %}";
+            } else {
+              alert(data.message || "Added to cart successfully!");
+            }
+          } else {
+            alert(data.message || "Failed to add product to Offerzone cart.");
+          }
+        })
+        .catch(err => {
+          console.error("Offerzone Cart Error:", err);
+          alert("Something went wrong processing your request!");
+        });
+      }
+
+      // Attach event listeners to action buttons
+      ["btn-add-to-cart-desktop", "btn-add-to-cart-mobile"].forEach(id => {
+        document.getElementById(id)?.addEventListener("click", () => handleCartAction(false));
+      });
+
+      ["btn-buy-now-desktop", "btn-buy-now-mobile"].forEach(id => {
+        document.getElementById(id)?.addEventListener("click", () => handleCartAction(true));
+      });
+    }
+  });
+</script>
 {% endblock content %}
-
-    
-
-
-
-

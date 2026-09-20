@@ -1,0 +1,154 @@
+{% if messages %}
+<style>
+  /* Toast Notification Container */
+  .oz-toast-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1090;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 380px;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  /* Individual Toast Card */
+  .oz-toast {
+    pointer-events: auto;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 14px 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    animation: ozSlideIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    transition: all 0.3s ease;
+  }
+
+  .oz-toast-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #212121;
+  }
+
+  .oz-toast-icon {
+    font-size: 18px;
+  }
+
+  /* Dismiss Close Button */
+  .oz-toast-close {
+    background: transparent;
+    border: none;
+    color: #878787;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s ease;
+  }
+
+  .oz-toast-close:hover {
+    color: #212121;
+  }
+
+  /* 3-Second Progress Bar */
+  .oz-toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    animation: ozProgress 3s linear forwards;
+  }
+
+  /* Message Level Theme Colors & Icons */
+  .oz-toast-success .oz-toast-icon { color: #388e3c; }
+  .oz-toast-success .oz-toast-progress { background-color: #388e3c; }
+
+  .oz-toast-error .oz-toast-icon,
+  .oz-toast-danger .oz-toast-icon { color: #e53935; }
+  .oz-toast-error .oz-toast-progress,
+  .oz-toast-danger .oz-toast-progress { background-color: #e53935; }
+
+  .oz-toast-warning .oz-toast-icon { color: #ff9f00; }
+  .oz-toast-warning .oz-toast-progress { background-color: #ff9f00; }
+
+  .oz-toast-info .oz-toast-icon { color: #2874f0; }
+  .oz-toast-info .oz-toast-progress { background-color: #2874f0; }
+
+  /* Animations */
+  @keyframes ozSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .oz-toast-fade-out {
+    opacity: 0 !important;
+    transform: translateX(100%) !important;
+  }
+
+  @keyframes ozProgress {
+    from { width: 100%; }
+    to { width: 0%; }
+  }
+</style>
+
+<div class="oz-toast-container">
+  {% for message in messages %}
+    <div class="oz-toast oz-toast-{{ message.tags|default:'info' }}" role="alert">
+      <div class="oz-toast-content">
+        <span class="oz-toast-icon">
+          {% if message.tags == 'success' %}
+            <i class="fa-solid fa-circle-check"></i>
+          {% elif message.tags == 'error' or message.tags == 'danger' %}
+            <i class="fa-solid fa-circle-xmark"></i>
+          {% elif message.tags == 'warning' %}
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          {% else %}
+            <i class="fa-solid fa-circle-info"></i>
+          {% endif %}
+        </span>
+        <span>{{ message }}</span>
+      </div>
+      <button type="button" class="oz-toast-close" onclick="dismissToast(this.parentElement)">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="oz-toast-progress"></div>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  function dismissToast(toast) {
+    if (!toast) return;
+    toast.classList.add('oz-toast-fade-out');
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }
+
+  // Auto-hide each notification after 3000ms (3 seconds)
+  document.addEventListener('DOMContentLoaded', () => {
+    const toasts = document.querySelectorAll('.oz-toast');
+    toasts.forEach(toast => {
+      setTimeout(() => {
+        dismissToast(toast);
+      }, 3000);
+    });
+  });
+</script>
+{% endif %}

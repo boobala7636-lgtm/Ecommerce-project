@@ -20,4 +20,4 @@ class CustomUserForm(UserCreationForm):
     class Meta:
         model = User
         # password1 and password2 are safely handled automatically outside this list. (just mention for development mode.)
-        fields = ['username','email','password1','password2']  
+        fields = ['username','email']  
