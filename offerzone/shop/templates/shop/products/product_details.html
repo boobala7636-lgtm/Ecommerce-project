@@ -47,21 +47,10 @@
     border: none;
     border-radius: 2px;
     padding: 14px 20px;
+    width: 100%;
   }
   .offerzone-btn-cart:hover {
     background-color: #f39600;
-    color: #fff;
-  }
-  .offerzone-btn-buy {
-    background-color: #fb641b;
-    color: #fff;
-    font-weight: 700;
-    border: none;
-    border-radius: 2px;
-    padding: 14px 20px;
-  }
-  .offerzone-btn-buy:hover {
-    background-color: #e65612;
     color: #fff;
   }
   .offerzone-price {
@@ -95,6 +84,7 @@
 
 <section class="offerzone-container py-3" style="min-height: 600px;">
   <div class="container-fluid px-md-5">
+    {% include 'shop/inc/messages.html' %}
     
     <!-- Breadcrumb -->
     <div class="row mb-2">
@@ -127,14 +117,11 @@
             <img src="{{ product_details.product_image.url }}" class="img-fluid" style="max-height: 350px; object-fit: contain;" alt="{{ product_details.name }}">
           </div>
 
-          <!-- Desktop Action Buttons -->
+          <!-- Desktop Action Button -->
           {% if product_details.quantity > 0 %}
-          <div class="d-none d-md-flex gap-2 mt-3">
-            <button type="button" id="btn-add-to-cart-desktop" class="btn offerzone-btn-cart flex-grow-1 text-uppercase">
+          <div class="d-none d-md-block mt-3">
+            <button type="button" id="btn-add-to-cart-desktop" class="btn offerzone-btn-cart text-uppercase">
               <svg width="16" height="16" fill="currentColor" class="bi bi-cart-fill me-1" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg> Add to Cart
-            </button>
-            <button type="button" id="btn-buy-now-desktop" class="btn offerzone-btn-buy flex-grow-1 text-uppercase">
-              <svg width="16" height="16" fill="currentColor" class="bi bi-lightning-fill me-1" viewBox="0 0 16 16"><path d="M11.251.055a.5.5 0 0 1 .249.403v5.158h3.5a.5.5 0 0 1 .37.837l-9 10a.5.5 0 0 1-.854-.516l1.352-5.877H2.5a.5.5 0 0 1-.37-.837l9-10a.5.5 0 0 1 .621-.168z"/></svg> Buy Now
             </button>
           </div>
           {% endif %}
@@ -178,13 +165,10 @@
             <span class="text-muted small">({{ product_details.quantity }} left in stock)</span>
           </div>
 
-          <!-- Mobile Action Buttons -->
-          <div class="d-flex d-md-none gap-2 mt-3">
-            <button type="button" id="btn-add-to-cart-mobile" class="btn offerzone-btn-cart flex-grow-1 text-uppercase">
-              Add to Cart
-            </button>
-            <button type="button" id="btn-buy-now-mobile" class="btn offerzone-btn-buy flex-grow-1 text-uppercase">
-              Buy Now
+          <!-- Mobile Action Button -->
+          <div class="d-block d-md-none mt-3">
+            <button type="button" id="btn-add-to-cart-mobile" class="btn offerzone-btn-cart text-uppercase">
+              <svg width="16" height="16" fill="currentColor" class="bi bi-cart-fill me-1" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg> Add to Cart
             </button>
           </div>
         {% else %}
@@ -220,74 +204,65 @@
     const qtyInput = document.getElementById("product-qty");
     const btnPlus = document.getElementById("btn-plus");
     const btnMinus = document.getElementById("btn-minus");
+    const pid = document.getElementById('product_id');
+    const csrftk = document.querySelector('[name="csrfmiddlewaretoken"]')?.value;
 
-    if (qtyInput) {
-      const maxStock = parseInt(qtyInput.getAttribute("data-max-stock"), 10) || 1;
-
-      btnPlus?.addEventListener("click", function () {
-        let currentVal = parseInt(qtyInput.value, 10) || 1;
-        if (currentVal < maxStock) {
-          qtyInput.value = currentVal + 1;
-        } else {
-          alert("Maximum available stock reached on Offerzone!");
+    if (btnPlus && btnMinus && qtyInput) {
+      btnPlus.addEventListener('click', function () {
+        let qty = parseInt(qtyInput.value, 10);
+        qty = isNaN(qty) ? 0 : qty;
+        if (qty < 10) {
+          qty++;
+          qtyInput.value = qty;
         }
       });
 
-      btnMinus?.addEventListener("click", function () {
-        let currentVal = parseInt(qtyInput.value, 10) || 1;
-        if (currentVal > 1) {
-          qtyInput.value = currentVal - 1;
+      btnMinus.addEventListener('click', function () {
+        let qty = parseInt(qtyInput.value, 10);
+        qty = isNaN(qty) ? 0 : qty;
+        if (qty > 1) {
+          qty--;
+          qtyInput.value = qty;
         }
-      });
-
-      function handleCartAction(isBuyNow) {
-        const productId = document.getElementById("product_id")?.value;
-        const quantity = parseInt(qtyInput.value, 10);
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-
-        if (!productId) {
-          alert("Product ID is missing!");
-          return;
-        }
-
-        fetch("{% url 'add_to_cart' %}", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken
-          },
-          body: JSON.stringify({
-            product_id: productId,
-            product_qty: quantity
-          })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === "success" || data.status === "Success") {
-            if (isBuyNow) {
-              window.location.href = "{% url 'checkout' %}";
-            } else {
-              alert(data.message || "Added to cart successfully!");
-            }
-          } else {
-            alert(data.message || "Failed to add product to Offerzone cart.");
-          }
-        })
-        .catch(err => {
-          console.error("Offerzone Cart Error:", err);
-          alert("Something went wrong processing your request!");
-        });
-      }
-
-      // Attach event listeners to action buttons
-      ["btn-add-to-cart-desktop", "btn-add-to-cart-mobile"].forEach(id => {
-        document.getElementById(id)?.addEventListener("click", () => handleCartAction(false));
-      });
-
-      ["btn-buy-now-desktop", "btn-buy-now-mobile"].forEach(id => {
-        document.getElementById(id)?.addEventListener("click", () => handleCartAction(true));
       });
     }
+
+    function addToCart() {
+      let qty = parseInt(qtyInput.value, 10);
+      qty = isNaN(qty) ? 0 : qty;
+
+      if (qty > 0 && pid) {
+        let postObj = {
+          product_qty: qty,
+          pid: pid.value,
+        };
+
+        fetch("/add_to_cart/", {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrftk
+          },
+          body: JSON.stringify(postObj)
+        })
+        .then(response => response.json())
+        .then(data => {
+          alert(data['message']);
+        })
+        .catch(error => {
+          console.error("Error adding to cart:", error);
+        });
+      } else {
+        alert('Please enter a valid quantity');
+      }
+    }
+
+    // Attach Add to Cart action to both Desktop and Mobile buttons
+    document.getElementById("btn-add-to-cart-desktop")?.addEventListener("click", addToCart);
+    document.getElementById("btn-add-to-cart-mobile")?.addEventListener("click", addToCart);
   });
 </script>
 {% endblock content %}

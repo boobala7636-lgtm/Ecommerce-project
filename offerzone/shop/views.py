@@ -3,6 +3,8 @@ from .models import *
 from django.contrib import messages
 from .forms import CustomUserForm
 from django.contrib.auth import authenticate, login, logout
+import json
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -81,8 +83,71 @@ def product_details(request,cname,pname):
         messages.warning(request, 'No Such Product Found')
         return redirect('collections')
 
-def add_to_cart(request):
-    pass
 
-def checkout(request):
-    pass
+
+def add_to_cart(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        if request.user.is_authenticated:
+            try:
+                data = json.loads(request.body)
+                product_qty = int(data['product_qty']) # Ensure it is handled as an integer
+                product_id = data['pid']
+
+                # 1. Fetch the full Product object instance from the database
+                product_status = Product.objects.get(id=product_id)
+                
+                
+                # 2. Check if the product is already in the user's cart
+                if Cart.objects.filter(user=request.user, product=product_status).exists():
+                    return JsonResponse({
+                        'status' : 'alert',
+                        'message' : 'Product Already in Cart'
+                    }, status=200)
+                else:
+                    # 3. Verify stock availability before adding
+                    if product_status.quantity >= product_qty:
+                        
+                        Cart.objects.create(
+                            user=request.user, 
+                            product=product_status, 
+                            product_qty=product_qty
+                        )
+                        return JsonResponse({
+                            'status':'success',
+                            'message' : 'Product successfully added to cart.'
+                        }, status=200)
+                    else:
+                        return JsonResponse({
+                                'status':'alert',
+                                'message' : 'Product stock Not Available '
+                            }, status=200)
+
+            except Product.DoesNotExist:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Product does not exist.'
+                }, status=404)
+            except (json.JSONDecodeError, KeyError, ValueError) as e:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Invalid data received.'
+                }, status=400)
+        else:
+            return JsonResponse({'status': 'Login to Add Cart'}, status=200)
+    else:
+        return JsonResponse({'status': 'Invalid Access'}, status=400)
+
+
+def cart_display(request):
+    if request.user.is_authenticated:
+        cart_data = Cart.objects.filter(user=request.user)
+        return render(request, 'shop/cart_details.html',{'cart_data':cart_data})
+    else:
+        messages.warning(request,'You Should login first')
+        return redirect('/')
+
+def remove_cart(request, id):
+    cartitem = Cart.objects.get(id=id)
+    cartitem.delete()
+    return redirect('cart_details')
+
